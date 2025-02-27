@@ -1,6 +1,5 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ConfigService } from './config/config.service';
 
 const app = await NestFactory.create(AppModule, {
 	abortOnError: process.env['NODE_ENV'] !== 'development',
@@ -8,6 +7,4 @@ const app = await NestFactory.create(AppModule, {
 });
 
 
-const configService = app.get(ConfigService);
-
-await app.listen(configService.port);
+await app.listen(8888);

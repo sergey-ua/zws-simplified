@@ -1,13 +1,11 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { BlockedHostnamesService } from '../../../../../zws/apps/api/src/blocked-hostnames/blocked-hostnames.service';
 import type { Schema } from '../db';
-import { SafeBrowsingService } from '../../../../../zws/apps/api/src/safe-browsing/safe-browsing.service';
 
 @Injectable()
 export class BlockedUrlsService {
 	constructor(
 		@Inject(BlockedHostnamesService) private readonly blockedHostnamesService: BlockedHostnamesService,
-		@Inject(SafeBrowsingService) private readonly safeBrowsingService: SafeBrowsingService,
 	) {}
 
 	async isUrlBlocked(url: Pick<(typeof Schema)['urls']['$inferSelect'], 'blocked' | 'url'> | URL): Promise<boolean> {
@@ -24,8 +22,7 @@ export class BlockedUrlsService {
 		}
 
 		const results = await Promise.all([
-			this.blockedHostnamesService.isHostnameBlocked(actualUrl),
-			this.safeBrowsingService.hasThreatMatches(actualUrl),
+			this.blockedHostnamesService.isHostnameBlocked(actualUrl)
 		]);
 
 		return results.some(Boolean);
